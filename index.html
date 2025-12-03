@@ -1,1087 +1,378 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Colony App - Fully Updated</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- 1. टाइटल अपडेट: 2025 डेट हटाई गई -->
+    <title>शक्तिशाली तिरंगा ID</title>
     
-    <!-- ================================================== -->
-    <!--            CSS Styles (Original + Ad Style)        -->
-    <!-- ================================================== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@600&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+
     <style>
         :root {
-            --primary-color: #007bff;
-            --secondary-color: #f0f2f5;
-            --dark-color: #343a40;
-            --light-color: #fff;
-            --border-radius: 8px;
-            --grey-color: #65676b;
-            --red-color: #dc3545;
-            --green-color: #28a745;
-            --sent-message-bg: #dcf8c6;
-            --received-message-bg: #ffffff;
-            --warning-bg: #fff3cd;
-            --warning-border: #ffeeba;
-            --warning-text: #856404;
+            --saffron: #FF9933;
+            --white: #FFFFFF;
+            --green: #138808;
+            --navy: #000080;
+            --bg-main: #eef2f7;
+            --dark-text: #2c3e50;
+            --btn-blue: #2980b9;
         }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; background-color: var(--secondary-color); color: var(--dark-color); }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
         
-        /* === AD BANNER CONTAINER STYLE === */
-        .banner-ad-container {
-            text-align: center;
-            margin: 1rem auto;
-            padding: 0.5rem;
-            background-color: var(--secondary-color);
-            min-height: 50px;
-            max-width: 320px; /* To contain the ad */
+        #sparkle-canvas-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+        .container { background: linear-gradient(145deg, #ffffff, #dbe1e8); padding: 30px; border-radius: 20px; box-shadow: 10px 10px 30px #c5cad0, -10px -10px 30px #ffffff; max-width: 480px; width: 100%; text-align: center; z-index: 10; position: relative; }
+        .header h1 { font-family: 'Teko', sans-serif; font-size: 3rem; margin: 0; letter-spacing: 1.5px; background: linear-gradient(45deg, var(--saffron), var(--green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .header p { color: #555; margin: 5px 0 25px 0; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: 600; }
+        .input-group input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box; }
+        #generate-btn { background: linear-gradient(45deg, var(--saffron), var(--green)); color: var(--white); border: none; padding: 15px; font-size: 1.2rem; font-weight: 600; border-radius: 50px; cursor: pointer; width: 100%; transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(0, 87, 25, 0.4); }
+        #generate-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0, 87, 25, 0.6); }
+        #id-card { width: 420px; height: 265px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); position: relative; overflow: hidden; display: flex; padding: 20px; box-sizing: border-box; border: 2px solid rgba(255, 255, 255, 0.7); color: var(--navy); background: linear-gradient(135deg, var(--saffron) 0%, var(--saffron) 30%, var(--white) 50%, var(--green) 70%, var(--green) 100%); background-size: cover; background-position: center; }
+        .card-left { display: flex; flex-direction: column; align-items: center; width: 130px; flex-shrink: 0; }
+        .profile-pic-container { width: 120px; height: 120px; border-radius: 50%; margin-top: 10px; border: 4px solid var(--white); box-shadow: 0 4px 15px rgba(0,0,0,0.6); overflow: hidden; background: linear-gradient(to bottom, var(--saffron) 33%, var(--white) 33%, var(--white) 66%, var(--green) 66%); }
+        #profile-pic-placeholder { width: 100%; height: 100%; object-fit: cover; mix-blend-mode: luminosity; filter: grayscale(1) contrast(1.2); }
+        #qrcode { margin-top: auto; width: 70px !important; height: 70px !important; border: 3px solid var(--white); padding: 2px; background-color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .card-right { padding-left: 20px; display: flex; flex-direction: column; width: 100%; }
+        .card-header { display: flex; align-items: center; }
+        .ashoka-emblem { width: 45px; height: 45px; filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.7)); }
+        .card-title { font-family: 'Teko', sans-serif; font-size: 1.5rem; margin-left: 10px; line-height: 1; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4); }
+        .card-title span { font-size: 0.9rem; font-weight: 400; display: block; }
+        .card-details { margin-top: 15px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); }
+        .detail-item { margin-bottom: 12px; }
+        .detail-item label { font-size: 0.7rem; font-weight: 700; display: block; text-transform: uppercase; opacity: 0.9;}
+        #user-name-placeholder { font-family: 'Poppins', sans-serif; font-size: 1.8rem; font-weight: 700; margin: 0; line-height: 1.2; }
+        #fixed-date { font-family: 'Teko'; font-size: 1.2rem; font-weight: 600; margin: 0; } /* यह अब खाली रहेगा या डायनामिकली भरा जाएगा */
+        .card-footer-text { font-size: 1.2rem; font-weight: 700; margin-top: auto; align-self: flex-end; font-family: 'Teko'; letter-spacing: 1px; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); }
+        #result-area { margin-top: 25px; background: #e9ecef; border-radius: 10px; padding: 20px; position: relative;}
+        #result-area.hidden { display: none; }
+        #result-area h3 { margin-top: 0; color: var(--navy); }
+        #generated-image { max-width: 100%; border-radius: 10px; border: 3px solid var(--navy); margin-bottom: 20px; }
+        .action-buttons { display: flex; flex-wrap: wrap; gap: 15px; }
+        .action-buttons button { flex-grow: 1; padding: 12px; border: none; border-radius: 50px; font-size: 1rem; font-weight: 600; cursor: pointer; color: white; min-width: 120px; }
+        #download-btn { background-color: var(--green); }
+        #share-btn { background-color: var(--saffron); }
+        #reset-btn { background-color: var(--btn-blue); width: 100%; }
+        /* SAJKU LOGO वाली संरचना (जो कार्ड में उपयोग नहीं होगी) */
+        .card-generator-container { position: absolute; left: -9999px; top: -9999px; }
+
+        /* कस्टम शेयर मॉडर्न CSS */
+        #share-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6); z-index: 1000;
+            display: none;
+            justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;
+        }
+        .modal-content {
+            background: white; padding: 25px; border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3); text-align: center;
+            max-width: 400px; width: 100%;
+        }
+        .modal-content h3 { margin-top: 0; color: var(--navy); }
+        #share-link-input {
+            width: 100%; padding: 10px; margin: 15px 0;
+            border: 1px solid #ccc; border-radius: 8px;
+            font-size: 0.9rem; text-align: center;
+            background-color: #f0f0f0; color: #333;
+        }
+        #copy-link-btn {
+            background-color: var(--green); color: white; border: none;
+            padding: 12px 20px; border-radius: 50px; font-weight: 600;
+            cursor: pointer; width: 100%; font-size: 1rem;
+        }
+        #close-modal-btn {
+            background-color: #aaa; color: white; border: none;
+            padding: 10px 20px; border-radius: 50px; font-weight: 600;
+            cursor: pointer; width: 100%; margin-top: 10px;
+        }
+        
+        /* AD CONTAINER STYLE */
+        .ad-container {
             display: flex;
             justify-content: center;
             align-items: center;
+            margin: 15px 0;
+            width: 100%;
         }
 
-        #auth-container { display: flex; justify-content: center; align-items: center; height: 100vh; padding: 1rem; }
-        .form-container { background: var(--light-color); padding: 2rem; border-radius: var(--border-radius); box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
-        .form-container h2 { margin-bottom: 1.5rem; }
-        .form-container input, .form-container textarea, .form-container label { width: 100%; padding: 0.8rem; margin-bottom: 1rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        .form-container label { border: none; padding: 0; text-align: left; font-weight: bold; margin-bottom: 0.25rem; }
-        .form-container button { width: 100%; padding: 0.8rem; background: var(--primary-color); color: var(--light-color); border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; }
-        .form-container button:hover { opacity: 0.9; }
-        .form-container p { margin-top: 1rem; }
-        .form-container a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
-        #app-container header { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 1rem; background-color: var(--light-color); box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
-        
-        .header-left { display: flex; align-items: center; gap: 15px; }
-        .header-btn { background: none; border: none; font-size: 1.5rem; color: var(--grey-color); cursor: pointer; padding: 5px; }
-
-        .header-right { display: flex; align-items: center; }
-        #language-switcher { margin-right: 15px; padding: 5px; border-radius: 4px; }
-        #profile-icon-container { display: flex; align-items: center; cursor: pointer; }
-        #header-user-name { margin-right: 10px; font-weight: bold; }
-        #header-user-photo { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-color); }
-        #home-page { padding: 1rem; max-width: 680px; margin: 0 auto; }
-        .post-card { background: var(--light-color); border-radius: var(--border-radius); padding: 1rem; margin-bottom: 1rem; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-        .post-header { display: flex; align-items: center; margin-bottom: 0.75rem; }
-        .post-header img { width: 40px; height: 40px; border-radius: 50%; margin-right: 10px; object-fit: cover; }
-        .post-author-info { display: flex; flex-direction: column; }
-        .post-author-info strong { font-size: 0.95rem; }
-        .post-author-info small { font-size: 0.8rem; color: var(--grey-color); }
-        .post-content p { margin: 0.5rem 0; word-wrap: break-word; }
-        .post-content img { max-width: 100%; width: 100%; height: auto; border-radius: var(--border-radius); margin-top: 1rem; cursor: pointer; background-color: #f0f2f5; }
-        .post-stats { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e0e0e0; font-size: 0.9rem; color: var(--grey-color); }
-        .post-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; padding-top: 5px; }
-        .post-actions button { background: none; border: none; cursor: pointer; padding: 0.75rem; font-size: 0.95rem; color: var(--grey-color); display: flex; align-items: center; justify-content: center; border-radius: 4px; }
-        .post-actions button:hover { background-color: #f0f2f5; }
-        .post-actions button.liked { color: var(--primary-color); font-weight: bold; }
-        .post-actions i { margin-right: 8px; font-size: 1.2rem; }
-        
-        .header-right { display: flex; align-items: center; }
-        #language-switcher { margin-right: 15px; padding: 5px; border-radius: 4px; }
-        #profile-icon-container { display: flex; align-items: center; cursor: pointer; }
-        #header-user-name { margin-right: 10px; font-weight: bold; }
-        #header-user-photo { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-color); }
-        #home-page { padding: 1rem; max-width: 680px; margin: 0 auto; }
-        .post-card { background: var(--light-color); border-radius: var(--border-radius); padding: 1rem; margin-bottom: 1rem; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-        .post-header { display: flex; align-items: center; margin-bottom: 0.75rem; }
-        .post-header img { width: 40px; height: 40px; border-radius: 50%; margin-right: 10px; object-fit: cover; }
-        .post-author-info { display: flex; flex-direction: column; }
-        .post-author-info strong { font-size: 0.95rem; }
-        .post-author-info small { font-size: 0.8rem; color: var(--grey-color); }
-        .post-content p { margin: 0.5rem 0; word-wrap: break-word; }
-        .post-content img { max-width: 100%; width: 100%; height: auto; border-radius: var(--border-radius); margin-top: 1rem; cursor: pointer; background-color: #f0f2f5; }
-        .post-stats { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e0e0e0; font-size: 0.9rem; color: var(--grey-color); }
-        .post-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; padding-top: 5px; }
-        .post-actions button { background: none; border: none; cursor: pointer; padding: 0.75rem; font-size: 0.95rem; color: var(--grey-color); display: flex; align-items: center; justify-content: center; border-radius: 4px; }
-        .post-actions button:hover { background-color: #f0f2f5; }
-        .post-actions button.liked { color: var(--primary-color); font-weight: bold; }
-        .post-actions i { margin-right: 8px; font-size: 1.2rem; }
-        
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; overflow-y: auto; display: none; align-items: center; justify-content: center; padding: 1rem; box-sizing: border-box; }
-        .modal.show { display: flex; }
-        .modal-content-wrapper { background: white; padding: 1rem; border-radius: var(--border-radius); width: 100%; max-width: 500px; position: relative; max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column;}
-        .close-modal-btn { position: absolute; top: 10px; right: 20px; font-size: 2.5rem; background: none; border: none; cursor: pointer; color: var(--grey-color); z-index: 10; }
-        #profile-modal .modal-content-wrapper { max-width: 700px; padding: 0.5rem; }
-        .profile-header { text-align: center; margin-bottom: 1rem; padding: 1rem; }
-        #modal-user-photo { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 1rem; }
-        .profile-stats { font-size: 1.1rem; margin: 1rem 0; color: var(--grey-color); }
-        .profile-header button { padding: 0.5rem 1rem; margin: 0 5px; border-radius: 4px; cursor: pointer; border: 1px solid var(--primary-color); }
-        #logout-btn { background-color: var(--red-color); color: white; border-color: var(--red-color); }
-        #edit-profile-btn { background-color: var(--primary-color); color: white; }
-        #edit-profile-form-container { background: #f1f1f1; padding: 1.5rem; border-radius: var(--border-radius); margin-bottom: 1rem; }
-        #edit-profile-form input { display: block; width: 100%; padding: 0.8rem; margin-bottom: 1rem; box-sizing: border-box; border-radius: 4px; border: 1px solid #ccc; }
-        #edit-profile-form button { padding: 0.7rem 1.5rem; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        #user-posts-container .post-card .post-actions { grid-template-columns: 1fr; }
-        #user-posts-container .post-card .delete-btn { background-color: var(--red-color); color: white; width: 100%; }
-        #create-post-fab { position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; background-color: var(--primary-color); color: white; border-radius: 50%; border: none; font-size: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer; display: flex; justify-content: center; align-items: center; z-index: 999; }
-        #create-post-form textarea, #create-post-form input { width: 100%; padding: 0.8rem; margin-bottom: 1rem; border-radius: 4px; border: 1px solid #ccc; box-sizing: border-box; }
-        #create-post-form textarea { min-height: 100px; resize: vertical; }
-        #create-post-form button { width: 100%; padding: 0.8rem; background: var(--primary-color); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; }
-        #chat-fab { position: fixed; bottom: 20px; left: 20px; width: 56px; height: 56px; background-color: #25D366; color: white; border-radius: 50%; border: none; font-size: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer; display: flex; justify-content: center; align-items: center; z-index: 999; }
-        #chat-modal, #private-chat-modal { padding: 0; }
-        #chat-modal .modal-content-wrapper, #private-chat-modal .modal-content-wrapper { padding: 0; width: 100%; max-width: 100%; height: 100%; max-height: 100%; border-radius: 0; background-color: var(--secondary-color); }
-        .chat-header { background: var(--light-color); padding: 1rem; border-bottom: 1px solid #ddd; text-align: center; position: sticky; top: 0; z-index: 5;}
-        #chat-messages-container { flex-grow: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .chat-message { display: flex; max-width: 80%; }
-        .chat-message.sent { align-self: flex-end; flex-direction: row-reverse; }
-        .chat-message.received { align-self: flex-start; }
-        .chat-message img.user-avatar { width: 35px; height: 35px; border-radius: 50%; margin: 0 10px; object-fit: cover; align-self: flex-end; }
-        .message-content { display: flex; flex-direction: column; }
-        .message-bubble { padding: 10px 15px; border-radius: 18px; word-wrap: break-word; }
-        .chat-message.sent .message-bubble { background-color: var(--sent-message-bg); border-top-right-radius: 4px; }
-        .chat-message.received .message-bubble { background-color: var(--received-message-bg); border-top-left-radius: 4px; box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
-        .message-info { font-size: 0.75rem; color: var(--grey-color); margin-top: 4px; }
-        .chat-message.sent .message-info { text-align: right; margin-right: 5px; }
-        .chat-message.received .message-info { margin-left: 5px; }
-        .chat-image { max-width: 100%; border-radius: 10px; margin-top: 5px; cursor: pointer; }
-        #chat-form-container { background: var(--light-color); padding: 1rem; border-top: 1px solid #ddd; display: flex; gap: 10px; align-items: center; }
-        #chat-form-container input { flex-grow: 1; padding: 12px; border: 1px solid #ccc; border-radius: 20px; margin: 0; }
-        #chat-form-container button { background-color: var(--primary-color); color: white; border: none; border-radius: 50%; width: 45px; height: 45px; font-size: 1.2rem; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-        .comment-entry { display: flex; align-items: flex-start; gap: 10px; padding: 8px; border-bottom: 1px solid #efefef; }
-        .comment-entry:last-child { border-bottom: none; }
-        .comment-entry img { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; margin-top: 5px; }
-        .comment-text-content { display: flex; flex-direction: column; background-color: var(--secondary-color); padding: 8px 12px; border-radius: 15px; flex-grow: 1; }  .comment-text-content strong { font-size: 0.9rem; }
-        .comment-text-content p { margin: 2px 0 0 0; font-size: 0.95rem; word-break: break-word; color: #050505; }
-        #users-list-container { display: flex; flex-direction: column; gap: 10px; padding: 1rem; }
-        .user-list-entry { display: flex; align-items: center; padding: 10px; border-radius: var(--border-radius); cursor: pointer; transition: background-color 0.2s; }
-        .user-list-entry:hover { background-color: #f0f2f5; }
-        .user-list-entry img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 15px; }
-        .user-info-and-status { flex-grow: 1; }
-        .user-info-and-status strong { font-size: 1.1rem; }
-        .user-presence { display: flex; align-items: center; font-size: 0.85rem; color: var(--grey-color); }
-        .presence-indicator { width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
-        .presence-indicator.online { background-color: var(--green-color); }
-        .presence-indicator.offline { background-color: var(--grey-color); }
-        .private-chat-header { display: flex; align-items: center; justify-content: space-between; background: var(--light-color); padding: 0.75rem 1rem; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 5;}
-        .private-chat-user-info { display: flex; align-items: center; gap: 10px; cursor: pointer;}
-        .private-chat-user-info img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
-        .private-chat-user-info strong { font-size: 1.1rem; }
-        .private-chat-actions button { background: none; border: none; font-size: 1.5rem; color: var(--primary-color); cursor: pointer; margin-left: 15px; }
-        #private-chat-messages-container { flex-grow: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        #private-chat-form-container { background: var(--light-color); padding: 1rem; border-top: 1px solid #ddd; display: flex; gap: 10px; align-items: center; }
-        #private-chat-form-container input { flex-grow: 1; padding: 12px; border: 1px solid #ccc; border-radius: 20px; margin: 0; }
-        #private-chat-form-container button { background-color: var(--primary-color); color: white; border: none; border-radius: 50%; width: 45px; height: 45px; font-size: 1.2rem; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-        #call-modal { background-color: #2c3e50; z-index: 1001; padding: 2rem; color: white; flex-direction: column; justify-content: space-between; }
-        .call-info { text-align: center; margin-top: 30px; }
-        #call-user-photo { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-        #call-user-name { font-size: 2rem; margin-top: 1.5rem; font-weight: 500; }
-        #call-status { font-size: 1.2rem; color: #bdc3c7; margin-top: 0.5rem; }
-        .call-actions { display: flex; justify-content: center; gap: 30px; margin-bottom: 50px; width: 100%; }
-        .call-actions button { width: 70px; height: 70px; border-radius: 50%; border: none; cursor: pointer; font-size: 1.8rem; color: white; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
-        .call-actions button:hover { transform: scale(1.1); }
-        #end-call-btn { background-color: var(--red-color); }
-        .action-btn-secondary { background-color: rgba(255, 255, 255, 0.2); }
-
-        /* ========= NAYA FEATURE: STORE / BUSINESS DASHBOARD CSS ========= */
-        #business-dashboard-modal .modal-content-wrapper,
-        #product-detail-modal .modal-content-wrapper,
-        #create-business-profile-modal .modal-content-wrapper,
-        #add-product-modal .modal-content-wrapper {
-             max-height: 95vh; max-width: 800px;
-        }
-
-        #business-dashboard-modal .modal-content-wrapper {
-            max-width: 100%; width: 100%; height: 100%; max-height: 100%; border-radius: 0;
-            padding: 0; background-color: var(--secondary-color);
-        }
-        .dashboard-header {
-            display: flex; justify-content: space-between; align-items: center;
-            background-color: var(--light-color); padding: 0.75rem 1rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 10;
-        } 
-        .dashboard-header .close-modal-btn { position: static; font-size: 1.5rem; padding: 0 10px; color: var(--grey-color); }
-        .dashboard-header h3 { margin: 0; font-size: 1.2rem; flex-grow: 1; text-align: center; }
-        .dashboard-main { padding: 1rem; overflow-y: auto; height: calc(100vh - 60px); /* Adjusted for header */ }
-        
-        .business-profile-card {
-            background: var(--light-color); border-radius: var(--border-radius);
-            padding: 1.5rem; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.12); margin-bottom: 1.5rem;
-        }
-        #business-profile-photo { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-color); margin-bottom: 1rem; }
-        #business-profile-name { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.5rem 0; }
-        #business-profile-about { color: var(--grey-color); margin: 0 0 1rem 0; white-space: pre-wrap; }
-        .business-contact-info { display: flex; flex-direction: column; gap: 8px; align-items: center; margin-bottom: 1rem; text-align: center;}
-        .business-contact-info span { display: flex; align-items: center; gap: 8px; }
-        .business-contact-info i { color: var(--primary-color); }
-        .disclaimer-box {
-            padding: 1rem; background-color: var(--warning-bg); border: 1px solid var(--warning-border);
-            color: var(--warning-text); border-radius: var(--border-radius); font-size: 0.9rem; margin-top: 1rem; text-align: left;
-        } .disclaimer-box p { margin: 0; }
-
-        #products-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem;
-            margin-top: 1.5rem;
-        }  .product-card {
-            background: var(--light-color); border-radius: var(--border-radius);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1); overflow: hidden; position: relative; cursor: pointer;
-            display: flex; flex-direction: column; transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .product-card:hover { transform: translateY(-5px); box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
-        .product-card img { width: 100%; height: 160px; object-fit: cover; background-color: #eee; }
-        .product-card-info { padding: 1rem; flex-grow: 1; border-top: 1px solid #eee;}
-        .product-card-info h5 { margin: 0 0 5px 0; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
-        .product-card-info p { margin: 0; font-size: 1.1rem; color: var(--green-color); font-weight: bold;}
-        .product-card .delete-btn {
-            position: absolute; top: 8px; right: 8px; background-color: rgba(220, 53, 69, 0.8); color: white;
-            border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 0.9rem;
-            cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-            opacity: 0; transition: opacity 0.2s; backdrop-filter: blur(2px);
-        }
-        .product-card:hover .delete-btn { opacity: 1; }
-        
-        #add-product-fab {
-            position: fixed; bottom: 80px; /* Adjusted to be above chat FAB */ right: 20px; width: 56px; height: 56px;
-            background-color: var(--green-color); color: white; border-radius: 50%; border: none;
-            font-size: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer;
-            display: none; /* Initially hidden */ justify-content: center; align-items: center; z-index: 1001;
-        }
-        #no-business-profile-msg { text-align: center; margin-top: 4rem; padding: 1rem; }
-        
-        /* Product Detail Modal ke liye Naya CSS */
-        #product-detail-modal .modal-content-wrapper {
-             max-height: 95vh; max-width: 700px; padding: 0;
-        }
-        #product-detail-content { overflow-y: auto; max-height: calc(95vh); }
-        #product-detail-modal .product-image {
-            width: 100%; height: auto; max-height: 50vh; object-fit: cover; background-color: #eee; cursor: pointer;
-        }  .product-detail-body { padding: 1.5rem; }
-        .product-detail-body h2 { margin-top: 0; margin-bottom: 0.5rem; font-size: 2rem; font-weight: 600; }
-        .product-detail-body .price { font-size: 1.8rem; color: var(--green-color); font-weight: bold; margin-bottom: 1rem; }
-        .product-detail-body .details { margin: 1.5rem 0; color: var(--dark-color); white-space: pre-wrap; font-size: 1rem; line-height: 1.6; }
-        .product-detail-body hr { border: 0; border-top: 1px solid #eee; margin: 1.5rem 0; }
-        .product-detail-body .post-actions { grid-template-columns: 1fr 1fr 1fr; margin-top: 1rem; } 
-        
-        .seller-info-card { background: var(--secondary-color); padding: 1.5rem; border-radius: var(--border-radius); margin-top: 1.5rem; border: 1px solid #e0e0e0;}
-        .seller-info-card h4 { margin-top: 0; margin-bottom: 1rem; font-size: 1.2rem;}
-        .seller-info-card .business-contact-info { align-items: flex-start; text-align: left; }
-        .seller-info-card .business-contact-info span { font-size: 1rem; }
-        .seller-info-card i { width: 25px; text-align: center; font-size: 1.1rem; }
-        
     </style>
 </head>
-<body>  <!-- ================================================== -->
-    <!--          HTML Content (With Static Ads)            -->
-    <!-- ================================================== -->
-    <div id="auth-container">
-        <div class="form-container" id="login-container"><h2 data-lang-key="loginTitle">Login</h2><form id="login-form"><input type="email" id="login-email" placeholder="Email" required><input type="password" id="login-password" placeholder="Password" required><button type="submit" data-lang-key="loginBtn">Login</button></form><p><span data-lang-key="noAccount">Don't have an account?</span> <a href="#" id="show-signup" data-lang-key="signupLink">Sign Up</a></p></div>
-        <div class="form-container" id="signup-container" style="display: none;"><h2 data-lang-key="signupTitle">Sign Up</h2><form id="signup-form"><input type="text" id="signup-name" placeholder="Full Name" required><input type="url" id="signup-photo" placeholder="Photo URL (Optional)"><input type="email" id="signup-email" placeholder="Email (For Login)" required><input type="password" id="signup-password" placeholder="Password (min. 6 characters)" required><button type="submit" data-lang-key="signupBtn">Sign Up</button></form><p><span data-lang-key="hasAccount">Already have an account?</span> <a href="#" id="show-login" data-lang-key="loginLink">Login</a></p></div>
+<body>
+    <canvas id="sparkle-canvas-bg"></canvas>
+
+    <!-- ============================================== -->
+    <!-- ========= ADSTERRA TOP BANNER ADD START ========= -->
+    <!-- ============================================== -->
+    <div class="ad-container">
+        <script type="text/javascript">
+            atOptions = {
+                'key' : 'a8a86addd465261167837209e2209a6c',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/a8a86addd465261167837209e2209a6c/invoke.js"></script>
+    </div>
+    <!-- ============================================ -->
+    <!-- ========= ADSTERRA TOP BANNER ADD END ========= -->
+    <!-- ============================================ -->
+
+
+    <div class="container">
+        <div class="header"><h1>शक्तिशाली तिरंगा ID</h1><p id="subtitle">15 अगस्त पर बनाएं अपनी डिजिटल पहचान।</p></div>
+        <div class="input-group"><label for="name-input">अपना पूरा नाम लिखें:</label><input type="text" id="name-input" placeholder="जैसे, विजय सिंह"></div>
+        <div class="input-group"><label for="photo-input">अपना फोटो अपलोड करें:</label><input type="file" id="photo-input" accept="image/*"></div>
+        <button id="generate-btn">ID कार्ड बनाएं ✨</button>
+        <div id="result-area" class="hidden">
+            <h3>बधाई हो! आपका ID कार्ड तैयार है!</h3><img id="generated-image" alt="Generated ID Card">
+            <div class="action-buttons">
+                <button id="download-btn">डाउनलोड</button>
+                <button id="share-btn">शेयर करें</button>
+                <button id="reset-btn">नया ID बनाएं</button>
+            </div>
+        </div>
     </div>
 
-    <div id="app-container" style="display: none;">
-        <header>
-            <div class="header-left">
-                <button id="show-business-dashboard-btn" class="header-btn" title="My Business Store"><i class="fas fa-store"></i></button>
-                <button id="show-users-list-btn" class="header-btn" title="Show All Users"><i class="fas fa-users"></i></button>
+    <!-- ================================================= -->
+    <!-- ========= ADSTERRA BOTTOM BANNER ADD START ========= -->
+    <!-- ================================================= -->
+    <div class="ad-container">
+        <script type="text/javascript">
+            atOptions = {
+                'key' : 'a8a86addd465261167837209e2209a6c',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/a8a86addd465261167837209e2209a6c/invoke.js"></script>
+    </div>
+    <!-- =============================================== -->
+    <!-- ========= ADSTERRA BOTTOM BANNER ADD END ========= -->
+    <!-- =============================================== -->
+    
+    <!-- SAJKU LOGO की जगह (जो अब कार्ड में नहीं दिखेगा) -->
+ <div class="card-generator-container">
+        <div id="id-card">
+            <div class="card-left">
+                <div class="profile-pic-container"><img id="profile-pic-placeholder" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Profile Picture"></div>
+                <div id="qrcode"></div>
             </div>
-            <div class="header-right">
-                <select id="language-switcher"><option value="en">English</option><option value="hi">हिन्दी</option></select>
-                <div id="profile-icon-container">
-                    <span id="header-user-name"></span>
-                    <img id="header-user-photo" src=" " alt="User Photo">
+            <div class="card-right">
+                <div class="card-header">
+                    <img class="ashoka-emblem" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjU2cHgiIGhlaWdodD0iNDQ4cHgiIHZpZXdCb3g9IjAgMCAyNTYgNDQ4IiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPHRpdGxlPkFzaG9rYS1TdGFtYmg8L3RpdGxlPgogICAgPGRlZnM+CiAgICAgICAgPGxpbmVhckdyYWRpZW50IHgxPSI1MCUiIHkxPSIwJSIgeDI9IjUwJSIgeTI9IjEwMCUiIGlkPSJsaW5lYXJHcmFkaWVudC0xIj4KICAgICAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI0ZGRkZGRiIgb2Zmc2V0PSIwJSI+PC9zdG9wPgogICAgICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjRkZGRkZGIiBvZmZzZXQ9IjEwMCUiPjwvc3RvcD4KICAgICAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPC9kZWZzPgogICAgPGcgaWQ9IlBhZ2UtMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9IkFzaG9rYS1TdGFtYmgiIGZpbGw9IiMwMDAwODAiIGZpbGwtcnVsZT0ibm9uemVybyI+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0yNDMuMTY4LDI1NC4zNjg2MTcgTDIyNi4xNiwxMzcuMzY4NjE3IEMyMjEuNDU2LDIzMi42NjQ2MTcgMjE1LjE2LDIzMC4yNjQ2MTcgMjA4LjQ1NiwyMzAuMjY0NjE3IEwyMDguNDU2LDIzMC4yNjQ2MTcgTDE3Ni45NTYsMjMwLjI2NDYxNyBMMTc2Ljk1NiwyNzUuNTY0NjE3IEMxNzYuOTU2LDI4Mi4xNjQ2MTcgMTcyLjM1NiwyODcuNTY0NjE3IDE2NC45NTYsMjg3LjU2NDYxNyBMMTY0Ljk1NiwyODcuNTY0NjE3IEwxMzAuOTU2LDI4Ny41NjQ2MTcgQzEyNC4zNTYsMjg3LjU2NDYxNyAxMTkuOTU2LDI4Mi4xNjQ2MTcgMTE5Ljk1NiwyNzUuNTY0NjE3IEwxMTkuOTU2LDI3NS41NjQ2MTcgTDExOS45NTYsMjMwLjI2NDYxNyBMODguNDU2LDIzMC4yNjQ2MTcgQzgxLjc1MiwyMzAuMjY0NjE3IDc1LjQ1NiwyMzMuNjY0NjE3IDcwLjY1NiwyMzguNDY0NjE3IEw1My43NTIsMjU1LjM2ODYxNyBDNDkuMTUyLDI1OS45NjQ2MTcgNDkuMTUyLDI2Ny4yNjQ2MTcgNTMuNzUyLDI3MS45NjQ2MTcgTDU5Ljg1MiwyNzguMDY0NjE3IEM0MS40NDgsMjk3Y2NjQ2MTcgMjkuNjUyLDMyMy40NjQ2MTcgMjkuNjUyLDM1Mi4yNjQ2MTcgTDI5LjY1MiwzNjQuNzY0NjE3IEMyOS42NTIsMzY3Ljg2NDYxNyAzMC44NTIsMzcwLjg4NDYxNyAzMy4xNTIsMzczLjE2NDYxNyBMMTQuMDM4MS4wNjQ2MTcgQzM5Ljg1MiwzODQuNTY0NjE3IDM5LjE1MiwzODguMzY0NjE3IDM5LjE1MiwzOTIuMjY0NjE3IEwzOS4xNTIsNDE0LjQ2NDYxNyBDMzkuMTUyLDQ3NC42NjQ2MTcgMTM1LjE1Miw0NzQuNjY0NjE3IDEzNS4xNTIsNDE0LjQ2NDYxNyBMMTM1LjE1MiwzOTIuMjY0NjE3IEMxMzUuMTUyLDM4OC4zNjQ2MTcgMTM0LjQ1MiwzODQuNTY0NjE3IDEzMy4yNTIsMzgxLjA2NDYxNyBMMTUxLjU1MiwzNjIuNzY0NjE3IEMxNjYuODUyLDM3NS4wNjQ2MTcgMTg2LjM1MiwzODIuMjY0NjE3IDIwNy45NTYsMzgyLjI2NDYxNyBMMjEwLjY1MiwzODIuMjY0NjE3IEMyMTcuMjUyLDM4Mi4yNjQ2MTcgMjIyLjY1MiwzNzYuODY0NjE3IDIyMi42NTIsMzcwLjI2NDYxNyBMMjIyLjY1MiwzMzguMzY0NjE3IEMyMjIuNjUyLDMwOC45NjQ2MTcgMjExLjM1MiwzODQuMDY0NjE3IDE5MS45NDgsMjY0LjQ2NDYxNyBMMTkuMDQ4LDI1OC4zNjQ2MTcgQzIwMi42NDgsMjUzLjU2ODYxNyAyMDIuNjQ4LDI0Ni4yNjg2MTcgMTk4LjA0OCwyNDEuNTY0NjE3IFogTTEyNy45NTIsNDQ4LjAwMDYxNyBDOTcuMDQ4LDQ0OC4wMDA2MTcgNzEuOTUyLDQyMi45MzI2MTcgNzEuOTUyLDM5Mi4wMDA2MTcgQzcxLjk1MiwzNzUuODAwNjE3IDg5LjU1MiwzNjAuNDAwNjE3IDExMy41NTIsMzQ5LjkwMDYxNyBMMTI3Ljk1MiwyNjQuMzAwNjE3IEMxMzkuNjUyLDM3Ni4wMDA2MTcgMTU4LjY1MiwzNzYuMDAwNjE3IDE3MC4zNTIsMzY0LjMwMDYxNyBMMTg0Ljc1MiwzNDkuOTAwNjE3IEMyMDguNzUyLDM2MC40MDA2MTcgMjI1Ljk1MiwzNzUuODAwNjE3IDIyNS45NTIsMzkyuMDAwNjE3IEMyMjUuOTUyLDQyMi45MzI2MTcgMjAwLjg0OCw0NDguMDAwNjE3IDE3MC4zNTIsNDQ4LjAwMDYxNyBaIE0yNDMuMjQ4LDExOC40MDA2MTcgQzI0MC45NDgsMTIwLjcwMDYxNyAyMzcuODQ4LDEyMi4wMDA2MTcgMjM0Ljc0OCwxMjIuMDAwNjE3IEwyMjIuOTQ4LDEyMi4wMDA2MTcgQzIxMS43NDgsMTIyLjAwMDYxNyAyMDEuMjQ4LDEyNy42MDA2MTcgMTk1LjI0OCwxMzYuOTAwNjE3IEMxODIuNzQ4LDE1MS4zMDA2MTcgMTYxLjM0OCwxNTcuODAwNjE3IDEzOC42NDgsMTU3LjgwMDYxNyBMMTE5LjE0OCwxNTcuODAwNjE3IEM5Ni41NDgsMTU3LjgwMDYxNyA3NS4yNDgsMTUxLjMwMDYxNyA2Mi42NDgsMTM2LjkwMDYxNyBDNTYuNjQ4LDEyNy42MDA2MTcgNDYuMjQ4LDEyMi4wMDA2MTcgMzUuMDQ4LDEyMi4wMDA2MTcgTDIzLjI0OCwxMjIuMDAwNjE3IEMyMC4xNDgsMTIyLjAwMDYxNyAxNy4wNDgsMTIwLjcwMDYxNyAxNC43NDgsMTE4LjQwMDYxNyBMMTQuNzQ4LDczLjYwMDYxNyBDMjkuOTQ4LDU4LjQwMDYxNyA1MC40NDgsNTAuMDAwNjE3IDcyLjA0OCw1MC4wMDA2MTcgTDczLjA0OCw1MC4wMDA2MTcgTDczLjA0OCw1MC4xMDA2MTcgTDk1LjA0OCw1MC4xMDA2MTcgTDk1LjA0OCw1MC4yMDA2MTcgTDk3LjA0OCw1MC4yMDA2MTcgTDk3LjA0OCw1MC4xMDA2MTcgTDExOS4wNDgsNTAuMTAwNjE3IEwxMTkuMDQ4LDUwLjIwMDYxNyBMMTIxLjA0OCw1MC4yMDA2MTcgTDEyMS4wNDgsNTAuMTAwNjE3IEwxNDAuNTQ4LDUwLjEwMDYxNyBDMTYyLjI0OCw1MC4xMDA2MTcgMTgzLjY0OCw1OC4zMDA2MTcgMTk4Ljg0OCw3My42MDA2MTcgTDE5OC44NDgsMTE4LjQwMDYxNyBaIj48L3BhdGg+PC9nPjwvZz48L3N2Zz4=" alt="Ashoka Emblem">
+                    <div class="card-title">भारत गणराज्य<span>REPUBLIC OF INDIA</span></div>
                 </div>
-            </div>
-        </header>
-        <main id="home-page">
-            <!-- BANNER AD: HOME TOP -->
-            <div class="banner-ad-container">
-                <script type="text/javascript">
-                    atOptions = { 'key' : '450ce8d1749a1a9bb98bee51d283a2c6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
-                </script>
-                <script type="text/javascript" src="//www.highperformanceformat.com/450ce8d1749a1a9bb98bee51d283a2c6/invoke.js"></script>
-            </div>
-            <div id="public-feed-container"></div>
-            <!-- BANNER AD: HOME BOTTOM -->
-            <div class="banner-ad-container">
-                <script type="text/javascript">
-                    atOptions = { 'key' : '450ce8d1749a1a9bb98bee51d283a2c6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
-                </script>
-                <script type="text/javascript" src="//www.highperformanceformat.com/450ce8d1749a1a9bb98bee51d283a2c6/invoke.js"></script>
-            </div>
-        </main>
-        <button id="create-post-fab" title="Create a Post"><i class="fas fa-plus"></i></button>
-        <button id="chat-fab" title="Open Colony Chat"><i class="fas fa-comments"></i></button>
-    </div>
-    
-    <!-- Modals -->
-    <div id="create-post-modal" class="modal"><div class="modal-content-wrapper"><button class="close-modal-btn" data-target="create-post-modal">×</button><h3 data-lang-key="createPostTitle">Create a new post</h3><form id="create-post-form"><textarea id="post-text" placeholder="What's on your mind?" required></textarea><input type="url" id="post-image-url" data-lang-key="imageUrlPlaceholder" placeholder="Paste Image URL here (optional)"><button type="submit" data-lang-key="postBtn">Post</button></form></div></div>
-    
-    <div id="profile-modal" class="modal">
-        <div class="modal-content-wrapper">
-            <button class="close-modal-btn" data-target="profile-modal">×</button>
-            <!-- BANNER AD: PROFILE TOP -->
-            <div class="banner-ad-container">
-                <script type="text/javascript">
-                    atOptions = { 'key' : '450ce8d1749a1a9bb98bee51d283a2c6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
-                </script>
-                <script type="text/javascript" src="//www.highperformanceformat.com/450ce8d1749a1a9bb98bee51d283a2c6/invoke.js"></script>
-            </div>
-            <div id="profile-content">
-                <div class="profile-header">
-                    <img id="modal-user-photo" src="" alt="User Photo">
-                    <h2 id="modal-user-name"></h2>
-                    <p class="profile-stats"><strong id="post-count">0</strong> <span data-lang-key="posts">Posts</span></p>
-                    <button id="edit-profile-btn" data-lang-key="editProfileBtn">Edit Profile</button>
-                    <button id="logout-btn" data-lang-key="logoutBtn">Logout</button>
+                <div class="card-details">
+                    <div class="detail-item"><label>नाम / Name</label><h2 id="user-name-placeholder">आपका नाम</h2></div>
+                    <div class="detail-item"><label>जारी करने की तिथि / Date of Issue</label><p id="fixed-date"></p></div> <!-- 2025 हटा दिया गया -->
                 </div>
-                <div id="edit-profile-form-container" style="display: none;">
-                    <form id="edit-profile-form">
-                        <input type="text" id="edit-name" placeholder="New Name">
-                        <input type="url" id="edit-photo" placeholder="New Photo URL">
-                        <button type="submit" data-lang-key="saveChangesBtn">Save Changes</button>
-                    </form>
-                </div> <div class="user-posts-section">
-                    <h3 data-lang-key="myPostsTitle">My Posts</h3>
-                    <div id="user-posts-container"></div>
-                </div>
-            </div>
-            <!-- BANNER AD: PROFILE BOTTOM -->
-            <div class="banner-ad-container">
-                <script type="text/javascript">
-                    atOptions = { 'key' : '450ce8d1749a1a9bb98bee51d283a2c6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
-                </script>
-                <script type="text/javascript" src="//www.highperformanceformat.com/450ce8d1749a1a9bb98bee51d283a2c6/invoke.js"></script>
+                <p class="card-footer-text">जय हिन्द</p>
             </div>
         </div>
     </div>
 
-    <div id="chat-modal" class="modal">
-        <div class="modal-content-wrapper">
-            <div class="chat-header"><h3>Colony Chat</h3><button class="close-modal-btn" data-target="chat-modal">×</button></div>
-            <!-- BANNER AD: COLONY CHAT TOP -->
-            <div class="banner-ad-container">
-                <script type="text/javascript">
-                    atOptions = { 'key' : '450ce8d1749a1a9bb98bee51d283a2c6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
-                </script>
-                <script type="text/javascript" src="//www.highperformanceformat.com/450ce8d1749a1a9bb98bee51d283a2c6/invoke.js"></script>
-            </div>
-            <div id="chat-messages-container"></div>
-            <div id="chat-form-container">
-                <form id="chat-form" style="display: flex; width: 100%; gap: 10px;">
-                    <input type="text" id="chat-message-input" placeholder="Type a message or paste an image URL..." autocomplete="off" required>
-                    <button type="submit" title="Send"><i class="fas fa-paper-plane"></i></button>
-                </form>
-            </div>
+    <!-- ========= कस्टम शेयर मॉडर्न HTML ========= -->
+    <div id="share-modal">
+        <div class="modal-content">
+            <h3>दोस्तों को शेयर करें</h3>
+            <p>नीचे दिए गए लिंक को कॉपी करें और शेयर करें।</p>
+            <input type="text" id="share-link-input" readonly>
+            <button id="copy-link-btn">लिंक कॉपी करें 📋</button>
+            <button id="close-modal-btn">बंद करें</button>
         </div>
     </div>
-    
-    <div id="image-viewer-modal" class="modal" style="background: rgba(0,0,0,0.9);"><button class="close-modal-btn" data-target="image-viewer-modal" style="color: white; font-size: 3rem; top: 20px; right: 30px;">×</button><img id="fullscreen-image" src="" style="max-width: 95vw; max-height: 95vh; object-fit: contain;" alt="Fullscreen Image"></div>
-    
-    <div id="comments-modal" class="modal"><div class="modal-content-wrapper" style="display: flex; flex-direction: column; max-height: 85vh; padding: 1rem;"><div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #dbdbdb; padding-bottom: 0.5rem;"><h3 style="margin: 0;">Comments</h3><button class="close-modal-btn" data-target="comments-modal" style="position: static; font-size: 2rem;">×</button></div><div id="comments-list-container" style="flex-grow: 1; overflow-y: auto; padding: 1rem 0;"></div><form id="add-comment-form" style="display: flex; gap: 10px; padding-top: 1rem; border-top: 1px solid #eee;"><input type="text" id="comment-input" placeholder="Add a comment..." required style="flex-grow: 1; padding: 0.8rem; border-radius: 20px; border: 1px solid #ccc; background: #f0f2f5;"><button type="submit" style="background-color: var(--primary-color); color: white; border: none; border-radius: 50%; width: 45px; height: 45px; font-size: 1.2rem; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center;"><i class="fas fa-paper-plane"></i></button></form></div></div>
-    
-    <div id="users-list-modal" class="modal">
-        <div class="modal-content-wrapper">
-            <button class="close-modal-btn" data-target="users-list-modal">×</button>
-            <h3>All Users</h3>
-            <!-- BANNER AD: USERS LIST TOP -->
-            <div class="banner-ad-container">
-                <script type="text/javascript">
-                    atOptions = { 'key' : '450ce8d1749a1a9bb98bee51d283a2c6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
-                </script>
-                <script type="text/javascript" src="//www.highperformanceformat.com/450ce8d1749a1a9bb98bee51d283a2c6/invoke.js"></script>
-            </div>
-            <div id="users-list-container"></div>
-            <!-- BANNER AD: USERS LIST BOTTOM -->
-            <div class="banner-ad-container">
-                <script type="text/javascript">
-                    atOptions = { 'key' : '450ce8d1749a1a9bb98bee51d283a2c6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
-                </script>
-                <script type="text/javascript" src="//www.highperformanceformat.com/450ce8d1749a1a9bb98bee51d283a2c6/invoke.js"></script>
-            </div>
-        </div>
-    </div>
-
-    <div id="private-chat-modal" class="modal">
-        <div class="modal-content-wrapper">
-            <div class="private-chat-header"><button class="close-modal-btn" data-target="private-chat-modal" style="position: static; font-size: 1.5rem; color: var(--grey-color);">‹</button><div id="private-chat-user-info" class="private-chat-user-info"><img src="" alt="User"><strong></strong></div><div id="private-chat-actions" class="private-chat-actions"><button title="Video Call" data-call-type="video"><i class="fas fa-video"></i></button><button title="Audio Call" data-call-type="audio"><i class="fas fa-phone"></i></button></div></div>
-            <!-- BANNER AD: PRIVATE CHAT TOP -->
-            <div class="banner-ad-container">
-                <script type="text/javascript">
-                    atOptions = { 'key' : '450ce8d1749a1a9bb98bee51d283a2c6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
-                </script>
-                <script type="text/javascript" src="//www.highperformanceformat.com/450ce8d1749a1a9bb98bee51d283a2c6/invoke.js"></script>
-            </div>
-            <div id="private-chat-messages-container"></div>
-            <div id="private-chat-form-container"><form id="private-chat-form" style="display: flex; width: 100%; gap: 10px;"><input type="text" id="private-chat-message-input" placeholder="Type a message..." autocomplete="off" required><button type="submit" title="Send"><i class="fas fa-paper-plane"></i></button></form></div>
-        </div>
-    </div>
-
-    <div id="call-modal" class="modal"><div class="call-info"><img id="call-user-photo" src="" alt="User"><h2 id="call-user-name"></h2><p id="call-status">Calling...</p></div><div class="call-actions"><button class="action-btn-secondary" title="Mute"><i class="fas fa-microphone-slash"></i></button><button id="end-call-btn" title="End Call"><i class="fas fa-phone-slash"></i></button><button class="action-btn-secondary" title="Speaker"><i class="fas fa-volume-up"></i></button></div></div>
-
-    <!-- ========= NAYA FEATURE: STORE / BUSINESS DASHBOARD MODALS ========= -->
-    <div id="business-dashboard-modal" class="modal">
-        <div class="modal-content-wrapper">
-            <div class="dashboard-header">
-                <button class="close-modal-btn" data-target="business-dashboard-modal" title="Back to App">‹</button>
-                <h3>My Business Store</h3>
-                <button id="edit-business-profile-btn" class="header-btn" style="font-size: 1.2rem;" title="Edit Business Profile"><i class="fas fa-edit"></i></button>
-            </div>
-            <!-- BANNER AD: BUSINESS DASHBOARD TOP -->
-            <div class="banner-ad-container">
-                <script type="text/javascript">
-                    atOptions = { 'key' : '450ce8d1749a1a9bb98bee51d283a2c6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
-                </script>
-                <script type="text/javascript" src="//www.highperformanceformat.com/450ce8d1749a1a9bb98bee51d283a2c6/invoke.js"></script>
-            </div>
-            <div id="business-dashboard-main-content" class="dashboard-main">
-                <!-- Business Profile aur Products yahan dynamically load honge -->
-            </div>
-            <!-- BANNER AD: BUSINESS DASHBOARD BOTTOM -->
-            <div class="banner-ad-container">
-                <script type="text/javascript">
-                    atOptions = { 'key' : '450ce8d1749a1a9bb98bee51d283a2c6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
-                </script>
-                <script type="text/javascript" src="//www.highperformanceformat.com/450ce8d1749a1a9bb98bee51d283a2c6/invoke.js"></script>
-            </div>
-        </div>
-        <button id="add-product-fab" title="Add a New Product/Service"><i class="fas fa-plus"></i></button>
-    </div> <div id="create-business-profile-modal" class="modal">
-        <div class="modal-content-wrapper">
-            <button class="close-modal-btn" data-target="create-business-profile-modal">×</button>
-            <h3>Create Your Business Profile</h3>
-            <p style="font-size: 0.9rem; color: var(--grey-color); margin-top: -1rem; margin-bottom: 1.5rem;">Aapki yeh jaankari public ko dikhegi. Taki log aapse sampark kar sakein.</p>
-            <form id="create-business-profile-form" style="padding:0; box-shadow:none; text-align: left;">
-                <label for="business-name-input">Business / Shop / Professional Name*</label>
-                <input type="text" id="business-name-input" placeholder="e.g., Sharma Kirana Store" required>
-                <label for="business-photo-input">Profile Photo URL*</label>
-                <input type="url" id="business-photo-input" placeholder="Aapke logo ya dukaan ka photo URL" required>
-                <label for="business-phone-input">Contact Mobile Number*</label>
-                <input type="tel" id="business-phone-input" placeholder="Customers ke liye mobile number" required>
-                <label for="business-email-input">Contact Email (Optional)</label>
-                <input type="email" id="business-email-input" placeholder="Email for customers (zaroori nahi)">
-                <label for="business-about-input">About Your Business / Address*</label>
-                <textarea id="business-about-input" rows="3" placeholder="Aap kya karte hain aur aapka pata. e.g., General Store, 123 Colony Road..." required></textarea>
-                <button type="submit">Create and Save Profile</button>
-            </form>
-        </div>
-    </div> 
-    
-    <div id="add-product-modal" class="modal">
-        <div class="modal-content-wrapper">
-            <button class="close-modal-btn" data-target="add-product-modal">×</button>
-            <h3>Add New Product / Service</h3>
-            <form id="add-product-form" style="padding:0; box-shadow:none; text-align: left;">
-                <label for="product-name-input">Product / Service Name*</label>
-                <input type="text" id="product-name-input" placeholder="e.g., Aashirvaad Atta 5kg" required>
-                <label for="product-price-input">Price / Rate*</label>
-                <input type="text" id="product-price-input" placeholder="e.g., ₹500 or 1500/month" required>
-                <label for="product-detail-input">Product Details*</label>
-                <textarea id="product-detail-input" rows="4" placeholder="Product ke baare me jaankari, features, etc." required></textarea>
-                <label for="product-image-url-input">Product Photo URL* (Ek Photo)</label>
-                <input type="url" id="product-image-url-input" placeholder="Product ke photo ka URL" required>
-                <button type="submit">Add Product</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="product-detail-modal" class="modal">
-        <div class="modal-content-wrapper">
-            <button class="close-modal-btn" data-target="product-detail-modal" style="color: white; background-color: rgba(0,0,0,0.4); border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; top: 15px; right: 15px; z-index: 20; font-size: 1.5rem;">×</button>
-            <div id="product-detail-content">
-                <!-- Product details, like/comment system yahan load hoga -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+    <!-- ========= कस्टम शेयर मॉडर्न HTML ========= -->
 
     <script>
-    // ======================================================
-    //     FIREBASE & JAVASCRIPT (Cleaned Version)
-    // ======================================================
-    const firebaseConfig = {
-    apiKey: "AIzaSyB6G4_hwS3-rnnzPEdbJ68ILV4XocJwE70",
-    authDomain: "sajku-f61a3.firebaseapp.com",
-    projectId: "sajku-f61a3",
-    storageBucket: "sajku-f61a3.firebasestorage.app",
-    messagingSenderId: "482528849168",
-    appId: "1:482528849168:web:a1b643f6e4e0d38078c995",
-    measurementId: "G-SVCVMGWFRG"
-  };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    const storage = firebase.storage();
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Sparkle logic (No Change) ---
+        const sparkleCanvas = document.getElementById('sparkle-canvas-bg'); const ctx = sparkleCanvas.getContext('2d'); let particles = []; const sparkleColors = ["#FF9933", "#FFFFFF", "#138808", "#000080"]; function resizeCanvas() { sparkleCanvas.width = window.innerWidth; sparkleCanvas.height = window.innerHeight; } function createParticle(x, y) { const size = Math.random() * 4 + 1; const speedY = Math.random() * 1 + 0.5; const color = sparkleColors[Math.floor(Math.random() * sparkleColors.length)]; return { x, y, size, speedY, color }; } function setupParticles() { particles = []; const particleCount = window.innerWidth / 15; for (let i = 0; i < particleCount; i++) { particles.push(createParticle(Math.random() * sparkleCanvas.width, Math.random() * sparkleCanvas.height)); } } function animateParticles() { ctx.clearRect(0, 0, sparkleCanvas.width, sparkleCanvas.height); particles.forEach(p => { p.y -= p.speedY; if (p.y < -p.size) { p.y = sparkleCanvas.height + p.size; p.x = Math.random() * sparkleCanvas.width; } ctx.beginPath(); ctx.fillStyle = p.color; ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill(); }); requestAnimationFrame(animateParticles); } window.addEventListener('resize', () => { resizeCanvas(); setupParticles(); }); resizeCanvas(); setupParticles(); animateParticles();
 
-    // ADSTERRA DIRECT LINK
-    const directLinkAdUrl = 'https://www.profitableratecpm.com/psf49k3inz?key=a7d54ab245fb15d43e5e6ef6496941dc';
+        // --- Form logic ---
+        const container = document.querySelector('.container');
+        const nameInput = document.getElementById('name-input');
+        const photoInput = document.getElementById('photo-input');
+        const generateBtn = document.getElementById('generate-btn');
+        const cardName = document.getElementById('user-name-placeholder');
+        const cardPhoto = document.getElementById('profile-pic-placeholder');
+        const qrCodeContainer = document.getElementById('qrcode');
+        const fixedDateElement = document.getElementById('fixed-date'); // नया एलिमेंट
+        const resultArea = document.getElementById('result-area');
+        const generatedImage = document.getElementById('generated-image');
+        const downloadBtn = document.getElementById('download-btn');
+        const shareBtn = document.getElementById('share-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        let generatedImageDataUrl = null;
 
-    // DOM REFERENCES
-    const authContainer = document.getElementById('auth-container');
-    const appContainer = document.getElementById('app-container');
-    const profileModal = document.getElementById('profile-modal');
-    const createPostModal = document.getElementById('create-post-modal');
-    const loginForm = document.getElementById('login-form');
-    const signupForm = document.getElementById('signup-form');
-    const showSignupLink = document.getElementById('show-signup');
-    const showLoginLink = document.getElementById('show-login');
-    const loginContainer = document.getElementById('login-container');
-    const signupContainer = document.getElementById('signup-container');
-    const headerUserName = document.getElementById('header-user-name');
-    const headerUserPhoto = document.getElementById('header-user-photo');
-    const profileIconContainer = document.getElementById('profile-icon-container');
-    const modalUserName = document.getElementById('modal-user-name');
-    const modalUserPhoto = document.getElementById('modal-user-photo');
-    const postCountElement = document.getElementById('post-count');
-    const logoutBtn = document.getElementById('logout-btn');
-    const editProfileBtn = document.getElementById('edit-profile-btn');
-    const editProfileFormContainer = document.getElementById('edit-profile-form-container');
-    const editProfileForm = document.getElementById('edit-profile-form');
-    const createPostFab = document.getElementById('create-post-fab');
-    const createPostForm = document.getElementById('create-post-form');
-    const publicFeedContainer = document.getElementById('public-feed-container');
-    const userPostsContainer = document.getElementById('user-posts-container');
-    const languageSwitcher = document.getElementById('language-switcher');
-    const chatFab = document.getElementById('chat-fab');
-    const chatModal = document.getElementById('chat-modal');
-    const chatForm = document.getElementById('chat-form');
-    const chatMessageInput = document.getElementById('chat-message-input');
-    const chatMessagesContainer = document.getElementById('chat-messages-container');
-    const imageViewerModal = document.getElementById('image-viewer-modal');
-    const fullscreenImage = document.getElementById('fullscreen-image');
-    const commentsModal = document.getElementById('comments-modal');
-    const commentsListContainer = document.getElementById('comments-list-container');
-    const addCommentForm = document.getElementById('add-comment-form');
-    const showUsersListBtn = document.getElementById('show-users-list-btn');
-    const usersListModal = document.getElementById('users-list-modal');
-    const usersListContainer = document.getElementById('users-list-container');
-    const privateChatModal = document.getElementById('private-chat-modal');
-    const privateChatUserInfo = document.getElementById('private-chat-user-info');
-    const privateChatMessagesContainer = document.getElementById('private-chat-messages-container');
-    const privateChatForm = document.getElementById('private-chat-form');
-    const privateChatActions = document.getElementById('private-chat-actions');
-    const callModal = document.getElementById('call-modal');
-    const callUserPhoto = document.getElementById('call-user-photo');
-    const callUserName = document.getElementById('call-user-name');
-    const callStatus = document.getElementById('call-status');
-    const endCallBtn = document.getElementById('end-call-btn');
-    const showBusinessDashboardBtn = document.getElementById('show-business-dashboard-btn');
-    const businessDashboardModal = document.getElementById('business-dashboard-modal');
-    const businessDashboardMainContent = document.getElementById('business-dashboard-main-content');
-    const editBusinessProfileBtn = document.getElementById('edit-business-profile-btn');
-    const createBusinessProfileModal = document.getElementById('create-business-profile-modal');
-    const createBusinessProfileForm = document.getElementById('create-business-profile-form');
-    const addProductFab = document.getElementById('add-product-fab');
-    const addProductModal = document.getElementById('add-product-modal');
-    const addProductForm = document.getElementById('add-product-form');
-    const productDetailModal = document.getElementById('product-detail-modal');
-    const productDetailContent = document.getElementById('product-detail-content');
-    let currentUserData = null; 
-    let currentBusinessProfile = null;
-    let productsUnsubscribe = null;
-    let privateChatUnsubscribe = null;
-    let commentsUnsubscribe = null;
-    
-    auth.onAuthStateChanged(user => {
-        if (user) {
-            updateUserPresence(user.uid, 'online');
-            authContainer.style.display = 'none';
-            appContainer.style.display = 'block';
-            db.collection('users').doc(user.uid).get().then(doc => {
-                if (!doc.exists) {
-                    const newProfile = { name: user.displayName || user.email.split('@')[0], email: user.email, photoURL: user.photoURL || 'https://i.stack.imgur.com/34AD2.jpg', presence: 'online', last_seen: firebase.firestore.FieldValue.serverTimestamp() };
-                    db.collection('users').doc(user.uid).set(newProfile).then(() => initializeApp(user.uid));
-                } else {
-                    initializeApp(user.uid);
-                }
-            });
-        } else {
-            authContainer.style.display = 'flex';
-            appContainer.style.display = 'none';
-            closeAllModals();
-            currentUserData = null;
+        // ========= कस्टम शेयर मॉडर्न वेरिएबल्स =========
+        const shareModal = document.getElementById('share-modal');
+        const shareLinkInput = document.getElementById('share-link-input');
+        const copyLinkBtn = document.getElementById('copy-link-btn');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        // ========= कस्टम शेयर मॉडर्न वेरिएबल्स =========
+
+        // URL से साझा किए गए नाम को हैंडल करना
+        const urlParams = new URLSearchParams(window.location.search);
+        const sharedName = urlParams.get('name');
+        if (sharedName) {
+            const subtitle = document.getElementById('subtitle');
+            const decodedName = decodeURIComponent(sharedName);
+            subtitle.innerHTML = `<b>${decodedName}</b> ने आपको अपना ID कार्ड भेजा है। <br>आप भी नीचे अपना ID बना सकते हैं!`;
+            // यदि नाम URL में है, तो इनपुट फील्ड को पॉप्युलेट करें
+            nameInput.value = decodedName;
         }
-    });   async function updateUserPresence(uid, status) { if (!uid) return; try { const userRef = db.collection('users').doc(uid); await userRef.update({ presence: status, last_seen: firebase.firestore.FieldValue.serverTimestamp() }); } catch (error) { console.error("Error updating presence:", error); } }
-    window.addEventListener('beforeunload', () => { if (auth.currentUser) { updateUserPresence(auth.currentUser.uid, 'offline'); } });
-    
-    logoutBtn.addEventListener('click', async () => {
-        window.open(directLinkAdUrl, '_blank');
-        if(auth.currentUser) {
-            await updateUserPresence(auth.currentUser.uid, 'offline');
-        }
-        auth.signOut();
-    });
-    
-    // ============ UPDATE START ============
-    signupForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const name = document.getElementById('signup-name').value;
-        const photoURLInput = document.getElementById('signup-photo').value.trim();
-        const email = document.getElementById('signup-email').value;
-        const password = document.getElementById('signup-password').value;
         
-        // Use default photo if user doesn't provide one
-        const finalPhotoURL = photoURLInput || 'https://i.stack.imgur.com/34AD2.jpg';
-
-        auth.createUserWithEmailAndPassword(email, password)
-            .then(userCredential => {
-                db.collection('users').doc(userCredential.user.uid).set({
-                    name: name,
-                    photoURL: finalPhotoURL, // Use the final URL here
-                    email: email,
-                    presence: 'online',
-                    last_seen: firebase.firestore.FieldValue.serverTimestamp()
-                }).then(() => {
-                    signupForm.reset();
-                });
-            })
-            .catch(error => {
-                alert("Error signing up: " + error.message);
-            });
-    });
-    // ============ UPDATE END ============
-
-    loginForm.addEventListener('submit', (e) => { e.preventDefault(); const email = document.getElementById('login-email').value; const password = document.getElementById('login-password').value; auth.signInWithEmailAndPassword(email, password).then(() => loginForm.reset()).catch(error => alert("Error logging in: " + error.message)); });
-
-    function initializeApp(uid) {
-        fetchUserData(uid);
-        fetchPublicFeed();
-        fetchChatMessages();
-    } 
-    function fetchUserData(uid) { db.collection('users').doc(uid).onSnapshot(doc => { if (doc.exists) { currentUserData = { uid: doc.id, ...doc.data() }; headerUserName.textContent = currentUserData.name; headerUserPhoto.src = currentUserData.photoURL; modalUserName.textContent = currentUserData.name; modalUserPhoto.src = currentUserData.photoURL; document.getElementById('edit-name').placeholder = currentUserData.name; document.getElementById('edit-photo').placeholder = currentUserData.photoURL; document.getElementById('edit-name').value = currentUserData.name; document.getElementById('edit-photo').value = currentUserData.photoURL; } }, error => { console.error("Error fetching user data:", error); }); }
-    
-    function closeAllModals() { 
-        document.querySelectorAll('.modal').forEach(modal => modal.classList.remove('show')); 
-        addProductFab.style.display = 'none';
-        if (privateChatUnsubscribe) { privateChatUnsubscribe(); privateChatUnsubscribe = null; }
-        if (commentsUnsubscribe) { commentsUnsubscribe(); commentsUnsubscribe = null; }
-        if (productsUnsubscribe) { productsUnsubscribe(); productsUnsubscribe = null; }
-    }
-    document.querySelectorAll('.close-modal-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const targetModal = e.target.closest('.modal');
-            if(targetModal) {
-                 targetModal.classList.remove('show');
-                 if(targetModal.id === 'business-dashboard-modal') {
-                     addProductFab.style.display = 'none';
-                     if(productsUnsubscribe) { productsUnsubscribe(); productsUnsubscribe = null; }
-                 }
-                 if (targetModal.id === 'private-chat-modal' && privateChatUnsubscribe) { privateChatUnsubscribe(); privateChatUnsubscribe = null; }
-                 if (targetModal.id === 'comments-modal' && commentsUnsubscribe) { commentsUnsubscribe(); commentsUnsubscribe = null; }
-            }
-        });
-    });
-    
-    showSignupLink.addEventListener('click', (e) => { e.preventDefault(); loginContainer.style.display = 'none'; signupContainer.style.display = 'block'; });
-    showLoginLink.addEventListener('click', (e) => { e.preventDefault(); signupContainer.style.display = 'none'; loginContainer.style.display = 'block'; });
-    profileIconContainer.addEventListener('click', () => { if (auth.currentUser) { fetchUserPosts(auth.currentUser.uid); profileModal.classList.add('show'); } });
-    createPostFab.addEventListener('click', () => { createPostModal.classList.add('show'); });
-    chatFab.addEventListener('click', () => { chatModal.classList.add('show'); });
-    editProfileBtn.addEventListener('click', () => { editProfileFormContainer.style.display = editProfileFormContainer.style.display === 'none' ? 'block' : 'none'; });
-
-    showBusinessDashboardBtn.addEventListener('click', () => {
-        if (!currentUserData) return;
-        businessDashboardModal.classList.add('show');
-        loadBusinessProfile();
-    });async function loadBusinessProfile() {
-        if (!currentUserData) return;
-        businessDashboardMainContent.innerHTML = `<p style="text-align:center; padding: 2rem;">Loading Profile...</p>`;
-
-        const profileRef = db.collection('businessProfiles').doc(currentUserData.uid);
-        const doc = await profileRef.get();
-
-        if (doc.exists) {
-            currentBusinessProfile = { id: doc.id, ...doc.data() };
-            renderBusinessProfile(currentBusinessProfile);
-            listenForProducts();
-            addProductFab.style.display = 'flex'; 
-            editBusinessProfileBtn.style.display = 'block';
-        } else {
-            currentBusinessProfile = null;
-            addProductFab.style.display = 'none'; 
-            editBusinessProfileBtn.style.display = 'none';
-            businessDashboardMainContent.innerHTML = `
-                <div id="no-business-profile-msg">
-                    <h3>Welcome to Your Business Store!</h3>
-                    <p>You haven't created your business profile yet.</p>
-                    <p>To list your products or services, please create your profile first.</p>
-                    <button id="create-business-profile-prompt-btn" style="padding: 0.8rem 1.5rem; font-size: 1rem; width: auto; display: inline-block; background-color:var(--primary-color); color:white; border:none; border-radius:4px; cursor:pointer;">Create My Business Profile</button>
-                </div>`;
-            document.getElementById('create-business-profile-prompt-btn').addEventListener('click', () => {
-                createBusinessProfileForm.reset();
-                createBusinessProfileModal.querySelector('h3').textContent = "Create Your Business Profile";
-                createBusinessProfileModal.querySelector('button[type="submit"]').textContent = "Create and Save Profile";
-                createBusinessProfileModal.classList.add('show');
-            });
-        }
-    } 
-    
-    function renderBusinessProfile(profile) {
-        businessDashboardMainContent.innerHTML = `
-            <div class="business-profile-card">
-                <img id="business-profile-photo" src="${profile.photoURL || 'https://via.placeholder.com/100'}" alt="Business Photo">
-                <h2 id="business-profile-name">${profile.businessName || 'Business Name'}</h2>
-                <p id="business-profile-about">${profile.about || 'Business description and address.'}</p>
-                <div class="business-contact-info">
-                    ${profile.phone ? `<span><i class="fas fa-phone-alt"></i> ${profile.phone}</span>` : ''}
-                    ${profile.email ? `<span><i class="fas fa-envelope"></i> ${profile.email}</span>` : ''}
-                </div>
-                 <div class="disclaimer-box">
-                    <p><strong>Disclaimer:</strong> This is a promotional page. For any purchase, please contact the seller directly using the details provided. The app is not responsible for any transactions.</p>
-                </div>
-            </div>
-            <h3 style="padding: 0 0.5rem;">My Products & Services</h3>
-            <div id="products-grid"><p style="text-align:center;">Loading products...</p></div>
-        `;
-    }
-
-    function listenForProducts() {
-        if (productsUnsubscribe) productsUnsubscribe(); 
-
-        const productsRef = db.collection('businessProfiles').doc(currentUserData.uid).collection('products').orderBy('createdAt', 'desc');
-        productsUnsubscribe = productsRef.onSnapshot(snapshot => {
-            const productsGrid = document.getElementById('products-grid');
-            if (!productsGrid) return;
-
-            productsGrid.innerHTML = '';
-            if (snapshot.empty) {
-                productsGrid.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; color: var(--grey-color);">You haven't added any products yet. Use the '+' button below to add one.</p>`;
+        generateBtn.addEventListener('click', () => {
+            const name = nameInput.value.trim();
+            const photoFile = photoInput.files[0];
+            
+            if (!name || !photoFile) {
+                alert('कृपया अपना नाम और फोटो दोनों चुनें।');
                 return;
             }
-snapshot.forEach(doc => {
-                const product = { id: doc.id, ...doc.data() };
-                const productCard = document.createElement('div');
-                productCard.className = 'product-card';
-                productCard.dataset.productId = product.id; 
-                productCard.innerHTML = `
-                    <img src="${product.imageUrl || 'https://via.placeholder.com/150'}" alt="${product.name}">
-                    <div class="product-card-info">
-                        <h5>${product.name}</h5>
-                        <p>${product.price || ''}</p>
-                    </div>
-                    <button class="delete-btn delete-product-btn" data-product-id="${product.id}" title="Delete Product"><i class="fas fa-trash"></i></button>
-                `;
-                productsGrid.appendChild(productCard);
-            }); }, error => {
-            console.error("Error listening for products:", error);
-            document.getElementById('products-grid').innerHTML = `<p style="grid-column: 1 / -1; text-align: center; color: var(--red-color);">Error loading products.</p>`;
+            
+            generateBtn.textContent = "प्रोसेसिंग...";
+            generateBtn.disabled = true;
+            cardName.textContent = name;
+            
+            // **2. वर्ष 2025 हटा दिया गया है, इसलिए तारीख खाली रहेगी या रीसेट होगी**
+            fixedDateElement.textContent = ""; 
+            
+            const appUrl = `${window.location.origin}${window.location.pathname}`;
+            qrCodeContainer.innerHTML = "";
+            new QRCode(qrCodeContainer, { text: appUrl, width: 64, height: 64, colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H });
+            
+            const reader = new FileReader();
+            reader.onload = (e) => { 
+                cardPhoto.src = e.target.result; 
+                // फोटो लोड होने के बाद ही कार्ड बनाएं
+                setTimeout(createCardImage, 100); 
+            };
+            reader.readAsDataURL(photoFile);
         });
-    }
 
-    editBusinessProfileBtn.addEventListener('click', () => {
-        if(currentBusinessProfile) {
-            const form = createBusinessProfileForm;
-            form.querySelector('#business-name-input').value = currentBusinessProfile.businessName || '';
-            form.querySelector('#business-photo-input').value = currentBusinessProfile.photoURL || '';
-            form.querySelector('#business-phone-input').value = currentBusinessProfile.phone || '';
-            form.querySelector('#business-email-input').value = currentBusinessProfile.email || '';
-            form.querySelector('#business-about-input').value = currentBusinessProfile.about || '';
-            createBusinessProfileModal.querySelector('h3').textContent = "Edit Your Business Profile";
-            createBusinessProfileModal.querySelector('button[type="submit"]').textContent = "Save Changes";
-            createBusinessProfileModal.classList.add('show');
-        }
-    });
-
-    createBusinessProfileForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const form = e.target;
-        const profileData = {
-            businessName: form.querySelector('#business-name-input').value,
-            photoURL: form.querySelector('#business-photo-input').value,
-            phone: form.querySelector('#business-phone-input').value,
-            email: form.querySelector('#business-email-input').value,
-            about: form.querySelector('#business-about-input').value,
-            ownerId: currentUserData.uid,
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        };
-        const saveButton = form.querySelector('button');
-        saveButton.disabled = true;
-        saveButton.textContent = 'Saving...';
-        try {
-            await db.collection('businessProfiles').doc(currentUserData.uid).set(profileData, { merge: true });
-            createBusinessProfileModal.classList.remove('show');
-            loadBusinessProfile(); 
-        } catch (error) {
-            console.error("Error saving business profile:", error);
-            alert("Profile could not be saved. Please try again.");
-        } finally {
-            saveButton.disabled = false;
-            saveButton.textContent = currentBusinessProfile ? 'Save Changes' : 'Create and Save Profile';
-        }
-    });
-
-    addProductFab.addEventListener('click', () => {
-        addProductForm.reset();
-        addProductModal.classList.add('show');
-    });
-
-    addProductForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const productData = {
-            name: document.getElementById('product-name-input').value,
-            price: document.getElementById('product-price-input').value,
-            detail: document.getElementById('product-detail-input').value,
-            imageUrl: document.getElementById('product-image-url-input').value,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            likes: [],
-            comments: []
-        };
-        const addButton = addProductForm.querySelector('button');
-        addButton.disabled = true;
-        addButton.textContent = 'Adding...';
-        try {
-            await db.collection('businessProfiles').doc(currentUserData.uid).collection('products').add(productData);
-            addProductModal.classList.remove('show');
-        } catch (error) {
-            console.error("Error adding product:", error);
-            alert("Product could not be added. Please try again.");
-        } finally {
-            addButton.disabled = false;
-            addButton.textContent = 'Add Product';
-        }
-    });
-
-    businessDashboardMainContent.addEventListener('click', (e) => {
-        const deleteButton = e.target.closest('.delete-product-btn');
-        const productCard = e.target.closest('.product-card');
-
-        if (deleteButton) {
-            e.stopPropagation(); 
-            const productId = deleteButton.dataset.productId;
-            if (confirm("Are you sure you want to delete this product?")) {
-                db.collection('businessProfiles').doc(currentUserData.uid).collection('products').doc(productId).delete()
-                  .catch(error => {
-                      console.error("Error deleting product: ", error);
-                      alert("Product could not be deleted.");
-                  });
-            }
-        } else if (productCard) {
-            const productId = productCard.dataset.productId;
-            showProductDetails(currentUserData.uid, productId);
-        }
-    });
-
-    async function showProductDetails(ownerId, productId) {
-        productDetailContent.innerHTML = '<p style="text-align:center; padding: 2rem;">Loading product details...</p>';
-        productDetailModal.classList.add('show');
-        productDetailModal.dataset.ownerId = ownerId;
-        productDetailModal.dataset.productId = productId;
-        try {
-            const productRef = db.collection('businessProfiles').doc(ownerId).collection('products').doc(productId);
-            const ownerProfileRef = db.collection('businessProfiles').doc(ownerId);
-            
-            const [productDoc, ownerDoc] = await Promise.all([productRef.get(), ownerProfileRef.get()]);
-
-            if (!productDoc.exists || !ownerDoc.exists) {
-                productDetailContent.innerHTML = '<p style="text-align:center; padding: 2rem;">Sorry, this product or seller could not be found.</p>';
-                return;
-            }
-            const product = {id: productDoc.id, ...productDoc.data()};
-            const ownerProfile = ownerDoc.data();
-            const isLiked = currentUserData && product.likes && product.likes.includes(currentUserData.uid);
-            
-            productRef.onSnapshot(doc => {
-                if (!doc.exists) return;
-                const updatedProduct = doc.data();
-                if (!updatedProduct) return;
-                const likesCount = updatedProduct.likes ? updatedProduct.likes.length : 0;
-                const commentsCount = updatedProduct.comments ? updatedProduct.comments.length : 0;
-                const newIsLiked = currentUserData && updatedProduct.likes && updatedProduct.likes.includes(currentUserData.uid);
-                const likesCountEl = productDetailContent.querySelector('.likes-count');
-                const commentsCountEl = productDetailContent.querySelector('.comments-count');
-                const likeBtnEl = productDetailContent.querySelector('.like-btn');
-                if (likesCountEl) likesCountEl.textContent = `${likesCount} Likes`;
-                if (commentsCountEl) commentsCountEl.textContent = `${commentsCount} Comments`;
-                if(likeBtnEl) likeBtnEl.classList.toggle('liked', newIsLiked);
+        function createCardImage() {
+            // SAJKU लोगो वाली जटिल संरचना को हटा दिया गया है, केवल आवश्यक #id-card को रेंडर करें
+            html2canvas(document.getElementById('id-card'), { useCORS: true, scale: 3, backgroundColor: null }).then(canvas => {
+                generatedImageDataUrl = canvas.toDataURL('image/png');
+                generatedImage.src = generatedImageDataUrl;
+                resultArea.classList.remove('hidden');
+                resultArea.scrollIntoView({ behavior: 'smooth' });
+                generateBtn.textContent = "ID कार्ड बनाएं ✨";
+                generateBtn.disabled = false;
             });
-            productDetailContent.innerHTML = `
-                <!-- BANNER AD: PRODUCT DETAIL TOP -->
-                <div class="banner-ad-container">
-                    <script type="text/javascript">
-                        atOptions = { 'key' : '450ce8d1749a1a9bb98bee51d283a2c6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
-                    <\/script>
-                    <script type="text/javascript" src="//www.highperformanceformat.com/450ce8d1749a1a9bb98bee51d283a2c6/invoke.js"><\/script>
-                </div>
-                <img src="${product.imageUrl}" class="product-image" alt="${product.name}">
-                <div class="product-detail-body">
-                    <h2>${product.name}</h2>
-                    <p class="price">${product.price}</p>
-                    <div class="post-stats"><span class="likes-count"></span><span class="comments-count"></span></div>
-                    <div class="post-actions">
-                         <button class="like-btn ${isLiked ? 'liked' : ''}"><i class="fa-solid fa-thumbs-up"></i> <span>Like</span></button>
-                         <button class="comment-btn"><i class="fa-solid fa-comment"></i> <span>Comment</span></button>
-                         <button class="share-btn"><i class="fa-solid fa-share"></i> <span>Share</span></button>
-                    </div>
-                    <p class="details">${product.detail}</p>
-                    <hr>
-                    <div class="seller-info-card">
-                        <h4>Contact Seller</h4>
-                        <div class="business-contact-info">
-                            <span><i class="fas fa-store"></i> <strong>${ownerProfile.businessName}</strong></span>
-                            ${ownerProfile.phone ? `<span><i class="fas fa-phone-alt"></i><a href="tel:${ownerProfile.phone}">${ownerProfile.phone}</a></span>` : ''}
-                            ${ownerProfile.email ? `<span><i class="fas fa-envelope"></i><a href="mailto:${ownerProfile.email}">${ownerProfile.email}</a></span>` : ''}
-                            <span style="white-space: pre-wrap; align-items: flex-start;"><i class="fas fa-map-marker-alt"></i> ${ownerProfile.about}</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- BANNER AD: PRODUCT DETAIL BOTTOM -->
-                <div class="banner-ad-container">
-                    <script type="text/javascript">
-                        atOptions = { 'key' : '450ce8d1749a1a9bb98bee51d283a2c6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
-                    <\/script>
-                    <script type="text/javascript" src="//www.highperformanceformat.com/450ce8d1749a1a9bb98bee51d283a2c6/invoke.js"><\/script>
-                </div>
-            `;
-        } catch (error) {
-            console.error("Error fetching product details:", error);
-            productDetailContent.innerHTML = '<p style="text-align:center; padding: 2rem;">Error loading details. Please try again.</p>';
         }
-    }
-    
-    productDetailModal.addEventListener('click', (e) => {
-        const { ownerId, productId } = productDetailModal.dataset;
-        if(!ownerId || !productId) return;
-        const likeBtn = e.target.closest('.like-btn');
-        const commentBtn = e.target.closest('.comment-btn');
-        const shareBtn = e.target.closest('.share-btn');
-        const image = e.target.closest('.product-image');
-        if (likeBtn) { toggleItemLike({ type: 'product', id: productId, ownerId: ownerId }); }
-        if (commentBtn) { openCommentsFor({ type: 'product', id: productId, ownerId: ownerId }); }
-        if (shareBtn) { shareItem({title: 'Check out this product!', text: 'Found this in my Colony App'}); }
-        if (image) { fullscreenImage.src = image.src; imageViewerModal.classList.add('show'); }
-    });
 
-    function toggleItemLike(context) {
-        if (!currentUserData) { alert("Please login to like this."); return; }
-        let itemRef;
-        if (context.type === 'post') {
-            itemRef = db.collection('posts').doc(context.id);
-        } else if (context.type === 'product') {
-            itemRef = db.collection('businessProfiles').doc(context.ownerId).collection('products').doc(context.id);
-        } else { return; }
-        db.runTransaction(async (transaction) => {
-            const itemDoc = await transaction.get(itemRef);
-            if (!itemDoc.exists) throw "Item does not exist!";
-            const data = itemDoc.data();
-            const likes = data.likes || [];
-            const uid = currentUserData.uid;
-            if (likes.includes(uid)) {
-                transaction.update(itemRef, { likes: firebase.firestore.FieldValue.arrayRemove(uid) });
+        downloadBtn.addEventListener('click', () => {
+            if (!generatedImageDataUrl) return;
+            const link = document.createElement('a');
+            link.href = generatedImageDataUrl;
+            link.download = `Tiranga_ID_${nameInput.value.trim().replace(/\s+/g, '_')}.png`;
+            link.click();
+        });
+
+        // शेयर बटन लॉजिक (नेटिव शेयर + कस्टम पॉपअप)
+        shareBtn.addEventListener('click', async () => {
+            if (!generatedImageDataUrl) return;
+
+            const currentName = nameInput.value.trim();
+            const baseUrl = `${window.location.origin}${window.location.pathname}`;
+            const shareUrl = `${baseUrl}?name=${encodeURIComponent(currentName)}`;
+            
+            if (navigator.share) {
+                try {
+                    const response = await fetch(generatedImageDataUrl);
+                    const blob = await response.blob();
+                    const file = new File([blob], `Tiranga_ID_${currentName.replace(/\s+/g, '_')}.png`, { type: 'image/png' });
+                    
+                    await navigator.share({
+                        title: 'मेरा शक्तिशाली तिरंगा ID',
+                        text: `🇮🇳 देखो! मैंने 15 अगस्त के लिए अपना 'शक्तिशाली तिरंगा ID' बनाया है। तुम भी इस लिंक पर क्लिक करके बनाओ! ✨`,
+                        url: shareUrl,
+                        files: [file]
+                    });
+                } catch (err) {
+                    console.error("Share failed:", err);
+                    // यदि नेटिव शेयर विफल हो, तो कस्टम पॉपअप दिखाएं
+                    shareLinkInput.value = shareUrl;
+                    shareModal.style.display = 'flex'; 
+                    copyLinkBtn.textContent = 'लिंक कॉपी करें 📋'; 
+                } 
             } else {
-                transaction.update(itemRef, { likes: firebase.firestore.FieldValue.arrayUnion(uid) });
-            }
-        }).catch(error => { console.error("Like transaction failed: ", error); });
-    }
-
-    async function shareItem(shareData) {
-        const data = { title: shareData.title || 'Check this out!', text: shareData.text || 'Shared from My Colony App', url: window.location.href };
-        try {
-            if (navigator.share) { await navigator.share(data); } else { alert('Web Share API not supported in your browser.'); }
-        } catch (err) { console.error('Error sharing:', err); }
-    }
-    
-    function openCommentsFor(context) {
-        commentsModal.dataset.context = JSON.stringify(context);
-        commentsListContainer.innerHTML = '<p>Loading comments...</p>';
-        addCommentForm.reset();
-        commentsModal.classList.add('show');
-        if (commentsUnsubscribe) commentsUnsubscribe();
-        let docRef;
-        if (context.type === 'post') {
-            docRef = db.collection('posts').doc(context.id);
-        } else if (context.type === 'product') {
-            docRef = db.collection('businessProfiles').doc(context.ownerId).collection('products').doc(context.id);
-        } else { return; }
-        commentsUnsubscribe = docRef.onSnapshot(doc => {
-            if (!doc.exists) { commentsListContainer.innerHTML = '<p>This item no longer exists.</p>'; return; }
-            const data = doc.data(); const comments = data.comments || [];
-            commentsListContainer.innerHTML = '';
-            if (comments.length === 0) {
-                commentsListContainer.innerHTML = '<p style="text-align:center; color: var(--grey-color);">No comments yet. Be the first to comment!</p>';
-                return;
-            }
-            comments.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-            comments.forEach(comment => {
-                const commentElement = document.createElement('div');
-                commentElement.classList.add('comment-entry');
-                commentElement.innerHTML = `<img src="${comment.userPhotoURL || 'https://i.stack.imgur.com/34AD2.jpg'}" alt="${comment.userName}"><div class="comment-text-content"><strong>${comment.userName}</strong><p>${comment.text.replace(/</g, "<").replace(/>/g, ">")}</p></div>`;
-                commentsListContainer.appendChild(commentElement);
-            });
-            commentsListContainer.scrollTop = commentsListContainer.scrollHeight;
-        });
-    }
-
-    addCommentForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const context = JSON.parse(commentsModal.dataset.context || '{}');
-        const commentInput = document.getElementById('comment-input');
-        const commentText = commentInput.value.trim();
-        if (!commentText || !context.id || !currentUserData) return;
-        const commentData = { userId: currentUserData.uid, userName: currentUserData.name, userPhotoURL: currentUserData.photoURL, text: commentText, createdAt: firebase.firestore.Timestamp.now() };
-        let docRef;
-        if (context.type === 'post') {
-            docRef = db.collection('posts').doc(context.id);
-        } else if (context.type === 'product') {
-            docRef = db.collection('businessProfiles').doc(context.ownerId).collection('products').doc(context.id);
-        } else { return; }
-        try {
-            await docRef.update({ comments: firebase.firestore.FieldValue.arrayUnion(commentData) });
-            commentInput.value = '';
-        } catch (error) { console.error("Error adding comment: ", error); alert("Could not add comment. Please try again."); }
-    });
-
-    createPostForm.addEventListener('submit', async (e) => { e.preventDefault(); const text = document.getElementById('post-text').value; const imageUrl = document.getElementById('post-image-url').value.trim(); const postButton = e.target.querySelector('button[type="submit"]'); if (!text && !imageUrl) { alert("Please write something or provide an image URL."); return; } postButton.disabled = true; postButton.textContent = "Posting..."; try { await db.collection('posts').add({ userId: currentUserData.uid, authorName: currentUserData.name, authorPhotoURL: currentUserData.photoURL, text: text, imageUrl: imageUrl, createdAt: firebase.firestore.FieldValue.serverTimestamp(), likes: [], comments: [] }); createPostForm.reset(); createPostModal.classList.remove('show'); } catch (error) { alert("Error creating post: " + error.message); } finally { postButton.disabled = false; postButton.textContent = "Post"; } });
-    function fetchPublicFeed() { publicFeedContainer.innerHTML = `<p>Loading...</p>`; db.collection('posts').orderBy('createdAt', 'desc').onSnapshot(snapshot => { publicFeedContainer.innerHTML = ''; if (snapshot.empty) { publicFeedContainer.innerHTML = `<p>No posts found...</p>`; return; } snapshot.forEach(doc => { publicFeedContainer.appendChild(createPostElement({ id: doc.id, ...doc.data() })); }); }, error => { console.error(error); publicFeedContainer.innerHTML = `<p>Error loading feed.</p>`; }); }
-    function fetchUserPosts(uid) { userPostsContainer.innerHTML = `<p>Loading...</p>`; db.collection('posts').where('userId', '==', uid).orderBy('createdAt', 'desc').onSnapshot(snapshot => { userPostsContainer.innerHTML = ''; postCountElement.textContent = snapshot.size; if (snapshot.empty) { userPostsContainer.innerHTML = '<p>You have not created any posts yet.</p>'; return; } snapshot.forEach(doc => { userPostsContainer.appendChild(createPostElement({ id: doc.id, ...doc.data() }, true)); }); }); }
-    
-    function createPostElement(post, isProfileView = false) {
-        const postElement = document.createElement('div'); postElement.classList.add('post-card'); postElement.setAttribute('data-post-id', post.id);
-        const time = post.createdAt ? post.createdAt.toDate().toLocaleString() : 'Just now';
-        const imageHtml = post.imageUrl ? `<img src="${post.imageUrl}" alt="Post Image" class="post-image-clickable">` : '';
-        let actionsHtml = `<button class="like-btn"><i class="fa-solid fa-thumbs-up"></i> <span>Like</span></button> <button class="comment-btn"><i class="fa-solid fa-comment"></i> <span>Comment</span></button> <button class="share-btn"><i class="fa-solid fa-share"></i> <span>Share</span></button>`;
-        if (isProfileView) { actionsHtml = `<button class="delete-btn" style="background-color:var(--red-color);color:white;width:100%;"><i class="fa-solid fa-trash"></i> <span>Delete</span></button>`; }
-        postElement.innerHTML = ` <div class="post-header"> <img src="${post.authorPhotoURL || 'placeholder.png'}" alt="${post.authorName}"> <div class="post-author-info"> <strong>${post.authorName}</strong> <small>${time}</small> </div> </div> <div class="post-content"> <p>${post.text.replace(/</g, "<").replace(/>/g, ">")}</p> ${imageHtml} </div> <div class="post-stats"> <span class="likes-count"></span> <span class="comments-count"></span> </div> <div class="post-actions"> ${actionsHtml} </div> `;
-        db.collection('posts').doc(post.id).onSnapshot(doc => {
-            if(doc.exists) {
-                const updatedPost = doc.data();
-                const likesCount = updatedPost.likes ? updatedPost.likes.length : 0;
-                const commentsCount = updatedPost.comments ? updatedPost.comments.length : 0;
-                const isLiked = currentUserData && updatedPost.likes && updatedPost.likes.includes(currentUserData.uid);
-                const likesCountEl = postElement.querySelector('.likes-count');
-                const commentsCountEl = postElement.querySelector('.comments-count');
-                const likeBtnEl = postElement.querySelector('.like-btn');
-                if(likesCountEl) likesCountEl.textContent = `${likesCount} Likes`;
-                if(commentsCountEl) commentsCountEl.textContent = `${commentsCount} Comments`;
-                if(likeBtnEl) likeBtnEl.classList.toggle('liked', isLiked);
+                // नेटिव शेयर समर्थित नहीं है, कस्टम पॉपअप दिखाएं
+                shareLinkInput.value = shareUrl;
+                shareModal.style.display = 'flex'; 
+                copyLinkBtn.textContent = 'लिंक कॉपी करें 📋'; 
             }
         });
-        return postElement;
-    }
-    document.body.addEventListener('click', (e) => {
-        const postCard = e.target.closest('.post-card');
-        if (!postCard) return;
-        const postId = postCard.dataset.postId;
-        const likeBtn = e.target.closest('.like-btn');
-        const commentBtn = e.target.closest('.comment-btn');
-        const shareBtn = e.target.closest('.share-btn'); 
-        const deleteBtn = e.target.closest('.delete-btn'); 
-        const clickableImage = e.target.closest('.post-image-clickable');
-        if (likeBtn) toggleItemLike({type: 'post', id: postId});
-        if (commentBtn) openCommentsFor({ type: 'post', id: postId });
-        if (shareBtn) shareItem({title: 'Check out this post!', text: 'Shared from My Colony App'});
-        if (deleteBtn) { if (confirm("Are you sure you want to delete this post?")) { db.collection('posts').doc(postId).delete(); } }
-        if (clickableImage) { fullscreenImage.src = clickableImage.src; imageViewerModal.classList.add('show'); }
+
+        // कस्टम पॉपअप कॉपी बटन
+        copyLinkBtn.addEventListener('click', () => {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(shareLinkInput.value).then(() => {
+                    copyLinkBtn.textContent = 'कॉपी हो गया! ✅';
+                }).catch(() => {
+                    shareLinkInput.select();
+                    document.execCommand('copy');
+                    copyLinkBtn.textContent = 'कॉपी हो गया! ✅';
+                });
+            } else {
+                shareLinkInput.select();
+                document.execCommand('copy');
+                copyLinkBtn.textContent = 'कॉपी हो गया! ✅';
+            }
+        });
+        
+        // कस्टम पॉपअप बंद बटन
+        closeModalBtn.addEventListener('click', () => {
+            shareModal.style.display = 'none';
+        });
+        
+        resetBtn.addEventListener('click', () => {
+            resultArea.classList.add('hidden'); 
+            nameInput.value = ''; 
+            photoInput.value = ''; 
+            cardName.textContent = 'आपका नाम'; 
+            cardPhoto.src = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='; 
+            qrCodeContainer.innerHTML = ""; 
+            fixedDateElement.textContent = ""; // तारीख रीसेट
+            generatedImageDataUrl = null; 
+            window.history.pushState({}, document.title, window.location.pathname); 
+            document.getElementById('subtitle').innerHTML = `15 अगस्त पर बनाएं अपनी डिजिटल पहचान।`; 
+            container.scrollIntoView({ behavior: 'smooth' });
+        });
     });
-
-    chatForm.addEventListener('submit', (e) => { e.preventDefault(); const messageText = chatMessageInput.value.trim(); if (messageText && currentUserData) { db.collection('chatMessages').add({ text: messageText, userId: currentUserData.uid, userName: currentUserData.name, userPhotoURL: currentUserData.photoURL, createdAt: firebase.firestore.FieldValue.serverTimestamp() }); chatMessageInput.value = ''; }});
-    function fetchAllUsers() { usersListContainer.innerHTML = `<p>Loading users...</p>`; db.collection('users').onSnapshot(snapshot => { if (snapshot.empty) { usersListContainer.innerHTML = '<p>No other users found.</p>'; return; } usersListContainer.innerHTML = ''; snapshot.forEach(doc => { const user = { id: doc.id, ...doc.data() }; if (user.id === auth.currentUser.uid) return; const userElement = document.createElement('div'); userElement.classList.add('user-list-entry'); userElement.dataset.uid = user.id; userElement.dataset.name = user.name; userElement.dataset.photo = user.photoURL; const isOnline = user.presence === 'online'; userElement.innerHTML = `<img src="${user.photoURL || 'https://i.stack.imgur.com/34AD2.jpg'}" alt="${user.name}"><div class="user-info-and-status"><strong>${user.name}</strong><div class="user-presence"><div class="presence-indicator ${isOnline ? 'online' : 'offline'}"></div><span>${isOnline ? 'Online' : 'Offline'}</span></div></div>`; userElement.addEventListener('click', () => openPrivateChat(user.id, user.name, user.photoURL)); usersListContainer.appendChild(userElement); }); }); }
-    showUsersListBtn.addEventListener('click', () => { usersListModal.classList.add('show'); fetchAllUsers(); });
-    function openPrivateChat(targetUid, targetName, targetPhoto) { usersListModal.classList.remove('show'); privateChatModal.classList.add('show'); const chatHeaderPhoto = privateChatUserInfo.querySelector('img'); const chatHeaderName = privateChatUserInfo.querySelector('strong'); chatHeaderPhoto.src = targetPhoto || 'https://i.stack.imgur.com/34AD2.jpg'; chatHeaderName.textContent = targetName; privateChatUserInfo.dataset.uid = targetUid; const chatId = [currentUserData.uid, targetUid].sort().join('_'); privateChatModal.dataset.chatId = chatId; fetchPrivateMessages(chatId); }
-    function fetchPrivateMessages(chatId) { if (privateChatUnsubscribe) privateChatUnsubscribe(); const messagesRef = db.collection('privateChats').doc(chatId).collection('messages').orderBy('createdAt'); privateChatUnsubscribe = messagesRef.onSnapshot(snapshot => { privateChatMessagesContainer.innerHTML = ''; snapshot.forEach(doc => { const message = doc.data(); const messageElement = createMessageElement(message, currentUserData, true); privateChatMessagesContainer.appendChild(messageElement); }); privateChatMessagesContainer.scrollTop = privateChatMessagesContainer.scrollHeight; }); }
-    privateChatForm.addEventListener('submit', async (e) => { e.preventDefault(); const chatId = privateChatModal.dataset.chatId; const messageInput = document.getElementById('private-chat-message-input'); const messageText = messageInput.value.trim(); if (messageText && currentUserData && chatId) { const messageData = { text: messageText, userId: currentUserData.uid, userName: currentUserData.name, userPhotoURL: currentUserData.photoURL, createdAt: firebase.firestore.FieldValue.serverTimestamp() }; await db.collection('privateChats').doc(chatId).collection('messages').add(messageData); await db.collection('privateChats').doc(chatId).set({ participants: chatId.split('_'), lastMessage: messageText, lastUpdatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true }); messageInput.value = ''; } });
-    function createMessageElement(message, currentUser, isPrivateChat = false) { const messageDiv = document.createElement('div'); const isSent = currentUser && message.userId === currentUser.uid; messageDiv.classList.add('chat-message', isSent ? 'sent' : 'received'); const time = message.createdAt ? message.createdAt.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''; const rawText = message.text; const isImageUrl = (url) => (url.startsWith('http://') || url.startsWith('https://')) && /\.(jpeg|jpg|gif|png|webp)$/i.test(url); let messageContentHtml = isImageUrl(rawText) ? `<a href="${rawText}" target="_blank" rel="noopener noreferrer"><img src="${rawText}" class="chat-image" alt="User image"></a>` : rawText.replace(/</g, "<").replace(/>/g, ">"); let senderNameHtml = ''; if (!isSent && !isPrivateChat) { senderNameHtml = `<strong>${message.userName}</strong><br>`; } messageDiv.innerHTML = `<img src="${message.userPhotoURL || 'https://i.stack.imgur.com/34AD2.jpg'}" alt="${message.userName}" class="user-avatar"><div class="message-content"><div class="message-bubble">${senderNameHtml}${messageContentHtml}</div><div class="message-info">${time}</div></div>`; return messageDiv; }
-    function fetchChatMessages() { db.collection('chatMessages').orderBy('createdAt').limitToLast(100).onSnapshot(snapshot => { chatMessagesContainer.innerHTML = ''; snapshot.forEach(doc => { const messageElement = createMessageElement(doc.data(), currentUserData); chatMessagesContainer.appendChild(messageElement); }); chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; }); }
-    privateChatActions.addEventListener('click', (e) => { const callBtn = e.target.closest('button[data-call-type]'); if (callBtn) { const callType = callBtn.dataset.callType; initiateCall(callType); } });
-    function initiateCall(callType) { const targetUserPhoto = privateChatUserInfo.querySelector('img').src; const targetUserName = privateChatUserInfo.querySelector('strong').textContent; callUserPhoto.src = targetUserPhoto; callUserName.textContent = targetUserName; callStatus.textContent = callType === 'video' ? 'Video calling...' : 'Audio calling...'; callModal.classList.add('show'); }
-    endCallBtn.addEventListener('click', () => { callModal.classList.remove('show'); });
-
     </script>
     
-    <!-- =========== ADSTERRA SOCIAL BAR AD START (Yeh Barkarar hai) =========== -->
-    <script type='text/javascript' src='//pl27185837.profitableratecpm.com/17/c6/35/17c635a23f67230c52f96c4ca97985d4.js'></script>
-    <!-- =========== ADSTERRA SOCIAL BAR AD END =========== -->
+    <!-- ============================================= -->
+    <!-- ========= ADSTERRA SOCIAL ADD START ========= -->
+    <!-- ============================================= -->
+    <script type='text/javascript' src='//pl27426224.profitableratecpm.com/11/ce/7b/11ce7b81f222c75679a01a7a49b9c982.js'></script>
+    <!-- =========================================== -->
+    <!-- ========= ADSTERRA SOCIAL ADD END ========= -->
+    <!-- =========================================== -->
 
 </body>
 </html>
